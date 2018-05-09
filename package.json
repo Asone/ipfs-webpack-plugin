@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "main": "ipfs-webpack-plugin.js",
   "author": "Victor Bjelkholm <victorbjelkholm@gmail.com>",
+  "contributors" : [
+    {
+      "name": "Nelson Herbin"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "build": "cd example/ && webpack"
