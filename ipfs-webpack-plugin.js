@@ -2,7 +2,6 @@
   const fs = require('fs')
   const IPFS = require('ipfs')
 
-  // TODO - doesn't exit properly, ipfs node is keeping process running?
   // TODO - get to work in Chrome "Uncaught RangeError: Array buffer allocation failed"
 
 
