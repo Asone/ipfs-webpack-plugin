@@ -43,36 +43,24 @@
       .then( res => { // process chunks once ipfs loaded using promise.
         const keys = Object.keys(this.params.assets);
 
-        for(chunk of this.params.chunks){ 
-          filename = this.params.assets[chunk];
+        for(asset of keys){ // iterate through assets
+          const filepath = asset.replace(/\?.*$/,''); // clean params in filename
+          fileToReplaceIn = (outputOptions.path + '/' + filepath); // build environmental path
+          const file = fs.readFileSync(fileToReplaceIn); // loads file
           
-          for(asset of keys){ // iterate through assets
-            const filepath = asset.replace(/\?.*$/,''); // clean params in filename
-            fileToReplaceIn = (outputOptions.path + '/' + filepath); // build environmental path
-            const file = fs.readFileSync(fileToReplaceIn); // loads file
-            
-            this._ipfs.files.add({ path: filepath, content: file }) 
-            .then( result => {
-              const uri = result;
-              // We should add here processing instructions in order to replace assets urls with ipfs urls.
-              return uri;
-            })
-            .then( result => {
-              // retrieve file content data
-              console.info('added the following file to repo :');
-              console.info(result[0]);
-              return this._ipfs.files.cat(result[0].hash);
-            }) 
-            // Uncomment the following line in order to output the content of each file and ensure it has
-            /*
-            .then( result => { 
-              // This part is just a way to ensure the data content exists. Uncomment to output
-              result.on('data', (file) => {
-                 console.log(file.toString());
-              });
-            });
-            */
-          }
+          this._ipfs.files.add({ path: filepath, content: file }) 
+          .then( result => {
+            const uri = result;
+            // We should add here processing instructions in order to replace assets urls with ipfs urls.
+            return uri;
+          })
+          .then( result => {
+            // retrieve file content data
+            console.info('added the following file to repo :');
+            console.info(result[0]);
+            return this._ipfs.files.cat(result[0].hash);
+          });
+        
         };
       return res;
       }).then( res => {
