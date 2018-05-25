@@ -26,6 +26,39 @@
 
   IPFSWebpackPlugin.prototype.apply = function (compiler) {
 
+    //console.log(Object.keys(compiler));
+    compiler.plugin('compilation', function (compilation) {
+
+      compilation.plugin('html-webpack-plugin-before-html-processing', function (htmlPluginData, callback) {
+        // console.log(Object.keys(htmlPluginData));
+        console.log(htmlPluginData.assets);
+      //  htmlPluginData.assets.chunks.main.entry = 'miaou.js';
+        htmlPluginData.assets.js = ['moo.js'];
+        htmlPluginData.assets.css = ['pwet.css'];
+       // console.log(htmlPluginData.assets);
+        return htmlPluginData;
+       });
+     
+      compilation.plugin('html-webpack-plugin-after-html-processing', function (htmlPluginData, callback) {
+       // console.log(htmlPluginData);
+       callback(null);
+      });
+
+    });
+    //compiler.hooks.compilation.tap('IPFSWebpackPlugin', () => {
+     // console.log('The compiler is starting a new compilation...');
+      // console.log(compilation);
+      /* compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync(
+        'MyPlugin',
+        (data, cb) => {
+          data.html += 'The Magic Footer'
+  
+          cb(null, data)
+        }
+      )
+      */
+    // })
+
     compiler.plugin('emit', (params, callback) => { // files emission process
       // adds some files to export
       params.assets['loader.js'] = addFile('loader.js');
@@ -38,9 +71,10 @@
 
     compiler.plugin('done', (stats) => { // files emission completed
       const { outputOptions } = stats.compilation
-
-      this._ipfs.start() // start ipfs node
-      .then( res => { // process chunks once ipfs loaded using promise.
+     // var m = Object.keys(stats.compilation);
+     // console.log(stats.compilation.assets);
+     // this._ipfs.start() // start ipfs node
+     // .then( res => { // process chunks once ipfs loaded using promise.
         const keys = Object.keys(this.params.assets);
 
         for(asset of keys){ // iterate through assets
@@ -55,18 +89,25 @@
             return uri;
           })
           .then( result => {
+            /*
             // retrieve file content data
-            console.info('added the following file to repo :');
+            console.info('added the following file to repo : ' + filepath);
             console.info(result[0]);
+            console.log('========== Begin replacement process of file ============');
+            const m = outputOptions.path + '/index.html';
+            let indexFile = fs.readFileSync(m);
+            console.log(indexFile.toString());
+            console.log('========== End replacement process of file ============');
+            */
             return this._ipfs.files.cat(result[0].hash);
           });
         
         };
-      return res;
-      }).then( res => {
-        this._ipfs.stop();
-      })
-      .catch(error => console.error('Node failed to start!', error));
+     // return res;
+      //}).then( res => {
+      //  this._ipfs.stop();
+      //})
+      //.catch(error => console.error('Node failed to start!', error));
     });
   }
 
