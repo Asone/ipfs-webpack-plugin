@@ -36,7 +36,9 @@
         htmlPluginData.assets.js = ['moo.js'];
         htmlPluginData.assets.css = ['pwet.css'];
        // console.log(htmlPluginData.assets);
-        return htmlPluginData;
+       // return htmlPluginData;
+        // callback(true);
+       // return htmlPluginData;
        });
      
       compilation.plugin('html-webpack-plugin-after-html-processing', function (htmlPluginData, callback) {
